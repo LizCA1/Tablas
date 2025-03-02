@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Juego de Multiplicación</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Animaciones suaves */
+    .fade-in {
+      animation: fadeIn 0.5s ease-out;
+    }
+    @keyframes fadeIn {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+  </style>
+</head>
+<body class="bg-blue-100 flex items-center justify-center min-h-screen">
+
+  <!-- Contenedor principal -->
+  <div class="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full fade-in">
+
+    <!-- Título del juego -->
+    <h1 class="text-3xl font-bold text-center text-blue-500 mb-4">¡Practica las Tablas de Multiplicar!</h1>
+
+    <!-- Sección de Ejercicio -->
+    <div id="ejercicio" class="text-2xl text-center text-green-600 mb-6">
+      <p id="pregunta"></p>
+      <input type="number" id="respuesta" class="border border-gray-300 p-2 rounded w-32 text-center text-xl mt-4" placeholder="Tu respuesta">
+      <button id="checkBtn" class="bg-blue-500 text-white py-2 px-4 rounded mt-4 w-full">Comprobar</button>
+    </div>
+
+    <!-- Mensaje de retroalimentación -->
+    <div id="mensaje" class="text-xl text-center mt-4 mb-6">
+      <!-- Aquí se muestra el mensaje de retroalimentación -->
+    </div>
+
+    <!-- Puntuación -->
+    <div id="puntuacion" class="text-center text-xl text-red-500">
+      <p>Aciertos: <span id="aciertos">0</span></p>
+      <p>Errores: <span id="errores">0</span></p>
+    </div>
+
+    <!-- Botón de reiniciar -->
+    <button id="reiniciarBtn" class="bg-red-500 text-white py-2 px-4 rounded mt-4 w-full">Reiniciar</button>
+  </div>
+
+  <script>
+    // Variables para almacenar la puntuación
+    let aciertos = 0;
+    let errores = 0;
+
+    // Elementos del DOM
+    const preguntaElement = document.getElementById('pregunta');
+    const respuestaElement = document.getElementById('respuesta');
+    const mensajeElement = document.getElementById('mensaje');
+    const aciertosElement = document.getElementById('aciertos');
+    const erroresElement = document.getElementById('errores');
+    const checkBtn = document.getElementById('checkBtn');
+    const reiniciarBtn = document.getElementById('reiniciarBtn');
+
+    // Función para generar un nuevo ejercicio
+    function generarEjercicio() {
+      const num1 = Math.floor(Math.random() * 9) + 1;
+      const num2 = Math.floor(Math.random() * 9) + 1;
+      preguntaElement.textContent = `¿Cuánto es ${num1} x ${num2}?`;
+
+      // Establecer el ejercicio en el objeto global
+      window.ejercicioCorrecto = num1 * num2;
+    }
+
+    // Función para comprobar la respuesta
+    function comprobarRespuesta() {
+      const respuesta = parseInt(respuestaElement.value);
+      if (respuesta === window.ejercicioCorrecto) {
+        aciertos++;
+        mensajeElement.textContent = '¡Correcto! Muy bien hecho.';
+        mensajeElement.classList.add('text-green-500');
+        mensajeElement.classList.remove('text-red-500');
+      } else {
+        errores++;
+        mensajeElement.textContent = '¡Ups! Intenta de nuevo.';
+        mensajeElement.classList.add('text-red-500');
+        mensajeElement.classList.remove('text-green-500');
+      }
+
+      // Actualizar la puntuación en tiempo real
+      aciertosElement.textContent = aciertos;
+      erroresElement.textContent = errores;
+
+      // Limpiar el campo de respuesta
+      respuestaElement.value = '';
+      respuestaElement.focus();
+
+      // Generar un nuevo ejercicio
+      setTimeout(generarEjercicio, 1500);
+    }
+
+    // Función para reiniciar el juego
+    function reiniciarJuego() {
+      aciertos = 0;
+      errores = 0;
+      aciertosElement.textContent = aciertos;
+      erroresElement.textContent = errores;
+      mensajeElement.textContent = '';
+      generarEjercicio();
+    }
+
+    // Evento de comprobar respuesta
+    checkBtn.addEventListener('click', comprobarRespuesta);
+
+    // Evento de reiniciar juego
+    reiniciarBtn.addEventListener('click', reiniciarJuego);
+
+    // Inicialización
+    generarEjercicio();
+  </script>
+</body>
+</html>
